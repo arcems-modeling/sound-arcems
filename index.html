@@ -82,7 +82,7 @@
     <header>
         <h1>Animal Sounds</h1>
     </header>
-    <p>Click on an animal to hear its sound and see the waveform and moving dot below.</p>
+    <p>Click on an animal to hear its sound and see the moving dot on the waveform.</p>
 
     <div class="container">
         <div class="animal" onclick="playSound('dog')">
@@ -101,7 +101,6 @@
 
     <audio id="audio" controls style="display:none;"></audio>
     <canvas id="waveformCanvas" width="800" height="200"></canvas>
-    <canvas id="dotCanvas" width="800" height="50"></canvas>
 
     <footer>
         <p>© 2025 Animal Sound Webpage. All Rights Reserved.</p>
@@ -116,9 +115,7 @@
 
         const audioElement = document.getElementById('audio');
         const waveformCanvas = document.getElementById('waveformCanvas');
-        const dotCanvas = document.getElementById('dotCanvas');
-        const waveformCtx = waveformCanvas.getContext('2d');
-        const dotCtx = dotCanvas.getContext('2d');
+        const ctx = waveformCanvas.getContext('2d');
         let audioBuffer = null;
 
         async function fetchAndDecodeAudio(url) {
@@ -134,21 +131,21 @@
             const step = Math.ceil(bufferData.length / waveformCanvas.width);
             const amp = waveformCanvas.height / 2;
 
-            waveformCtx.fillStyle = 'rgba(255, 255, 255, 1)';
-            waveformCtx.fillRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+            ctx.fillRect(0, 0, waveformCanvas.width, waveformCanvas.height);
 
-            waveformCtx.lineWidth = 2;
-            waveformCtx.strokeStyle = 'rgb(0, 0, 255)';
-            waveformCtx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'rgb(0, 0, 255)';
+            ctx.beginPath();
 
             for (let i = 0; i < waveformCanvas.width; i++) {
                 const min = Math.min(...bufferData.slice(i * step, (i + 1) * step));
                 const max = Math.max(...bufferData.slice(i * step, (i + 1) * step));
-                waveformCtx.moveTo(i, amp + min * amp);
-                waveformCtx.lineTo(i, amp + max * amp);
+                ctx.moveTo(i, amp + min * amp);
+                ctx.lineTo(i, amp + max * amp);
             }
 
-            waveformCtx.stroke();
+            ctx.stroke();
         }
 
         function playSound(animal) {
@@ -157,34 +154,28 @@
             drawWaveform(audioUrl);
             audioElement.play();
 
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const analyser = audioContext.createAnalyser();
-            const source = audioContext.createMediaElementSource(audioElement);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-
             function drawMovingDot() {
-                // Clear the dot canvas
-                dotCtx.fillStyle = 'rgba(255, 255, 255, 1)';
-                dotCtx.fillRect(0, 0, dotCanvas.width, dotCanvas.height);
+                // Clear the canvas
+                ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
 
-                // Draw baseline
-                dotCtx.lineWidth = 2;
-                dotCtx.strokeStyle = 'rgb(200, 200, 200)';
-                dotCtx.beginPath();
-                dotCtx.moveTo(0, dotCanvas.height / 2);
-                dotCtx.lineTo(dotCanvas.width, dotCanvas.height / 2);
-                dotCtx.stroke();
+                // Redraw the waveform
+                drawWaveform(audioUrl);
 
                 // Calculate dot position
-                const progress = audioElement.currentTime / audioBuffer.duration;
-                const x = progress * dotCanvas.width;
+                const progress = audioElement.currentTime / audioElement.duration;
+                const x = progress * waveformCanvas.width;
 
                 // Draw the red dot
-                dotCtx.beginPath();
-                dotCtx.arc(x, dotCanvas.height / 2, 5, 0, Math.PI * 2);
-                dotCtx.fillStyle = 'red';
-                dotCtx.fill();
+                const bufferData = audioBuffer.getChannelData(0);
+                const step = Math.ceil(bufferData.length / waveformCanvas.width);
+                const index = Math.floor(progress * bufferData.length);
+                const amp = waveformCanvas.height / 2;
+                const y = amp + bufferData[index] * amp;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
 
                 if (!audioElement.paused && !audioElement.ended) {
                     requestAnimationFrame(drawMovingDot);
