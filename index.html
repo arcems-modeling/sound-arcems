@@ -82,7 +82,7 @@
     <header>
         <h1>Animal Sounds</h1>
     </header>
-    <p>Click on an animal to hear its sound and see the moving dot along the sound wave.</p>
+    <p>Click on an animal to hear its sound and see the waveform and moving dot below.</p>
 
     <div class="container">
         <div class="animal" onclick="playSound('dog')">
@@ -100,7 +100,8 @@
     </div>
 
     <audio id="audio" controls style="display:none;"></audio>
-    <canvas id="soundCanvas" width="800" height="200"></canvas>
+    <canvas id="waveformCanvas" width="800" height="200"></canvas>
+    <canvas id="dotCanvas" width="800" height="50"></canvas>
 
     <footer>
         <p>© 2025 Animal Sound Webpage. All Rights Reserved.</p>
@@ -114,8 +115,10 @@
         };
 
         const audioElement = document.getElementById('audio');
-        const canvas = document.getElementById('soundCanvas');
-        const ctx = canvas.getContext('2d');
+        const waveformCanvas = document.getElementById('waveformCanvas');
+        const dotCanvas = document.getElementById('dotCanvas');
+        const waveformCtx = waveformCanvas.getContext('2d');
+        const dotCtx = dotCanvas.getContext('2d');
         let audioBuffer = null;
 
         async function fetchAndDecodeAudio(url) {
@@ -128,24 +131,24 @@
         async function drawWaveform(audioUrl) {
             audioBuffer = await fetchAndDecodeAudio(audioUrl);
             const bufferData = audioBuffer.getChannelData(0); // Use the first channel
-            const step = Math.ceil(bufferData.length / canvas.width);
-            const amp = canvas.height / 2;
+            const step = Math.ceil(bufferData.length / waveformCanvas.width);
+            const amp = waveformCanvas.height / 2;
 
-            ctx.fillStyle = 'rgba(255, 255, 255, 1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            waveformCtx.fillStyle = 'rgba(255, 255, 255, 1)';
+            waveformCtx.fillRect(0, 0, waveformCanvas.width, waveformCanvas.height);
 
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'rgb(0, 0, 255)';
-            ctx.beginPath();
+            waveformCtx.lineWidth = 2;
+            waveformCtx.strokeStyle = 'rgb(0, 0, 255)';
+            waveformCtx.beginPath();
 
-            for (let i = 0; i < canvas.width; i++) {
+            for (let i = 0; i < waveformCanvas.width; i++) {
                 const min = Math.min(...bufferData.slice(i * step, (i + 1) * step));
                 const max = Math.max(...bufferData.slice(i * step, (i + 1) * step));
-                ctx.moveTo(i, amp + min * amp);
-                ctx.lineTo(i, amp + max * amp);
+                waveformCtx.moveTo(i, amp + min * amp);
+                waveformCtx.lineTo(i, amp + max * amp);
             }
 
-            ctx.stroke();
+            waveformCtx.stroke();
         }
 
         function playSound(animal) {
@@ -154,35 +157,41 @@
             drawWaveform(audioUrl);
             audioElement.play();
 
-            const step = Math.ceil(audioBuffer.length / canvas.width);
-            const bufferData = audioBuffer.getChannelData(0); // For rendering dot
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audioElement);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
 
-            function drawMarker() {
-                // Clear the marker layer
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            function drawMovingDot() {
+                // Clear the dot canvas
+                dotCtx.fillStyle = 'rgba(255, 255, 255, 1)';
+                dotCtx.fillRect(0, 0, dotCanvas.width, dotCanvas.height);
 
-                // Redraw the waveform
-                drawWaveform(audioUrl);
+                // Draw baseline
+                dotCtx.lineWidth = 2;
+                dotCtx.strokeStyle = 'rgb(200, 200, 200)';
+                dotCtx.beginPath();
+                dotCtx.moveTo(0, dotCanvas.height / 2);
+                dotCtx.lineTo(dotCanvas.width, dotCanvas.height / 2);
+                dotCtx.stroke();
 
-                // Calculate marker position
+                // Calculate dot position
                 const progress = audioElement.currentTime / audioBuffer.duration;
-                const x = progress * canvas.width;
+                const x = progress * dotCanvas.width;
 
                 // Draw the red dot
-                const index = Math.floor(progress * audioBuffer.length);
-                const y = canvas.height / 2 + bufferData[index] * (canvas.height / 2);
-                ctx.beginPath();
-                ctx.arc(x, y, 5, 0, Math.PI * 2);
-                ctx.fillStyle = 'red';
-                ctx.fill();
+                dotCtx.beginPath();
+                dotCtx.arc(x, dotCanvas.height / 2, 5, 0, Math.PI * 2);
+                dotCtx.fillStyle = 'red';
+                dotCtx.fill();
 
                 if (!audioElement.paused && !audioElement.ended) {
-                    requestAnimationFrame(drawMarker);
+                    requestAnimationFrame(drawMovingDot);
                 }
             }
 
-            drawMarker();
+            drawMovingDot();
         }
     </script>
 </body>
