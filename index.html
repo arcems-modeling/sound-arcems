@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Sound Webpage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .animal {
+            display: inline-block;
+            margin: 20px;
+            cursor: pointer;
+        }
+        img {
+            width: 100px;
+            height: 100px;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Animal Sounds</h1>
+    <p>Click on an animal to hear its sound and see the sound decibel plot.</p>
+
+    <div class="animal" onclick="playSound('dog')">
+        <img src="dog.png" alt="Dog">
+        <p>Dog</p>
+    </div>
+    <div class="animal" onclick="playSound('cat')">
+        <img src="cat.png" alt="Cat">
+        <p>Cat</p>
+    </div>
+    <div class="animal" onclick="playSound('cow')">
+        <img src="cow.png" alt="Cow">
+        <p>Cow</p>
+    </div>
+
+    <audio id="audio" controls style="display:none;"></audio>
+    <canvas id="soundCanvas" width="600" height="200"></canvas>
+
+    <script>
+        const sounds = {
+            dog: 'dog_bark.mp3',
+            cat: 'cat_meow.mp3',
+            cow: 'cow_moo.mp3'
+        };
+
+        const audioElement = document.getElementById('audio');
+        const canvas = document.getElementById('soundCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function playSound(animal) {
+            audioElement.src = sounds[animal];
+            audioElement.play();
+            visualizeSound(audioElement);
+        }
+
+        function visualizeSound(audio) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function draw() {
+                requestAnimationFrame(draw);
+
+                analyser.getByteFrequencyData(dataArray);
+
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const barWidth = (canvas.width / bufferLength) * 2.5;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = dataArray[i] / 2;
+                    ctx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                    x += barWidth + 1;
+                }
+            }
+
+            draw();
+        }
+    </script>
+</body>
+</html>
