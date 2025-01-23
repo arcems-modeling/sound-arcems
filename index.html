@@ -82,7 +82,7 @@
     <header>
         <h1>Animal Sounds</h1>
     </header>
-    <p>Click on an animal to hear its sound and see the sound decibel plot.</p>
+    <p>Click on an animal to hear its sound and see the waveform plot.</p>
 
     <div class="container">
         <div class="animal" onclick="playSound('dog')">
@@ -130,7 +130,7 @@
             source.connect(analyser);
             analyser.connect(audioContext.destination);
 
-            analyser.fftSize = 2048;
+            analyser.fftSize = 2048; // High resolution for waveform
             const bufferLength = analyser.fftSize;
             const dataArray = new Uint8Array(bufferLength);
 
@@ -139,19 +139,19 @@
 
                 analyser.getByteTimeDomainData(dataArray);
 
+                // Clear canvas
                 ctx.fillStyle = 'rgba(255, 255, 255, 1)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = 'rgb(0, 0, 0)';
-
+                ctx.strokeStyle = 'rgb(0, 0, 255)';
                 ctx.beginPath();
 
                 const sliceWidth = canvas.width / bufferLength;
                 let x = 0;
 
                 for (let i = 0; i < bufferLength; i++) {
-                    const v = dataArray[i] / 128.0; // Normalize to 0-1
+                    const v = dataArray[i] / 128.0; // Normalize data
                     const y = (v * canvas.height) / 2;
 
                     if (i === 0) {
