@@ -7,42 +7,104 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
             text-align: center;
-            margin: 20px;
         }
+
+        header {
+            background-color: #6c63ff;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 20px;
+        }
+
         .animal {
             display: inline-block;
-            margin: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
         }
-        img {
-            width: 100px;
-            height: 100px;
+
+        .animal:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
+
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+        }
+
         canvas {
             margin-top: 20px;
+            border: 2px solid #6c63ff;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            margin-top: 20px;
+            padding: 10px 0;
+            background-color: #6c63ff;
+            color: white;
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <h1>Animal Sounds</h1>
+    <header>
+        <h1>Animal Sounds</h1>
+    </header>
     <p>Click on an animal to hear its sound and see the sound decibel plot.</p>
 
-    <div class="animal" onclick="playSound('dog')">
-        <img src="dog.png" alt="Dog">
-        <p>Dog</p>
-    </div>
-    <div class="animal" onclick="playSound('cat')">
-        <img src="cat.png" alt="Cat">
-        <p>Cat</p>
-    </div>
-    <div class="animal" onclick="playSound('cow')">
-        <img src="cow.png" alt="Cow">
-        <p>Cow</p>
+    <div class="container">
+        <div class="animal" onclick="playSound('dog')">
+            <img src="dog.png" alt="Dog">
+            <p>Dog</p>
+        </div>
+        <div class="animal" onclick="playSound('cat')">
+            <img src="cat.png" alt="Cat">
+            <p>Cat</p>
+        </div>
+        <div class="animal" onclick="playSound('cow')">
+            <img src="cow.png" alt="Cow">
+            <p>Cow</p>
+        </div>
     </div>
 
     <audio id="audio" controls style="display:none;"></audio>
     <canvas id="soundCanvas" width="600" height="200"></canvas>
+
+    <footer>
+        <p>© 2025 Animal Sound Webpage. All Rights Reserved.</p>
+    </footer>
 
     <script>
         const sounds = {
@@ -77,7 +139,7 @@
 
                 analyser.getByteFrequencyData(dataArray);
 
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 const barWidth = (canvas.width / bufferLength) * 2.5;
@@ -85,7 +147,7 @@
 
                 for (let i = 0; i < bufferLength; i++) {
                     const barHeight = dataArray[i] / 2;
-                    ctx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+                    ctx.fillStyle = `rgb(${barHeight + 100}, 50, 150)`;
                     ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
                     x += barWidth + 1;
                 }
