@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sound Wave with Moving Dot</title>
+    <title>Sound Wave</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -98,7 +98,7 @@
     <header>
         <h1>Animal Sounds</h1>
     </header>
-    <p>Click on an animal to hear its sound and see the moving dot on the waveform.</p>
+    <p>Click on an animal to hear its sound and see the waveform.</p>
 
     <div class="slider-container">
         <div class="animal" onclick="playSound('dog')">
@@ -204,35 +204,6 @@
             audioElement.src = audioUrl;
             drawWaveform(audioUrl);
             audioElement.play();
-
-            function drawMovingDot() {
-                ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
-
-                // Redraw the waveform
-                drawWaveform(audioUrl);
-
-                // Calculate dot position
-                const progress = audioElement.currentTime / audioElement.duration;
-                const x = progress * waveformCanvas.width;
-
-                // Draw the red dot
-                const bufferData = audioBuffer.getChannelData(0);
-                const step = Math.ceil(bufferData.length / waveformCanvas.width);
-                const index = Math.floor(progress * bufferData.length);
-                const amp = waveformCanvas.height / 2;
-                const y = amp + bufferData[index] * amp;
-
-                ctx.beginPath();
-                ctx.arc(x, y, 5, 0, Math.PI * 2);
-                ctx.fillStyle = 'red';
-                ctx.fill();
-
-                if (!audioElement.paused && !audioElement.ended) {
-                    requestAnimationFrame(drawMovingDot);
-                }
-            }
-
-            drawMovingDot();
         }
     </script>
 </body>
