@@ -31,26 +31,41 @@
             color: #555;
         }
 
-        .container {
+        .slider-container {
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
-            padding: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 20px;
+            padding: 10px;
+            background-color: white;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .slider-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .slider-container::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 10px;
         }
 
         .animal {
+            flex: 0 0 auto;
             display: inline-block;
             border: 2px solid #ddd;
             border-radius: 10px;
-            padding: 10px;
+            padding: 15px;
             background-color: white;
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            width: 150px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .animal:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
 
@@ -58,6 +73,7 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
+            margin-bottom: 10px;
         }
 
         canvas {
@@ -84,7 +100,7 @@
     </header>
     <p>Click on an animal to hear its sound and see the moving dot on the waveform.</p>
 
-    <div class="container">
+    <div class="slider-container">
         <div class="animal" onclick="playSound('dog')">
             <img src="dog.png" alt="Dog">
             <p>Dog</p>
@@ -96,6 +112,34 @@
         <div class="animal" onclick="playSound('cow')">
             <img src="cow.png" alt="Cow">
             <p>Cow</p>
+        </div>
+        <div class="animal" onclick="playSound('lion')">
+            <img src="lion.png" alt="Lion">
+            <p>Lion</p>
+        </div>
+        <div class="animal" onclick="playSound('elephant')">
+            <img src="elephant.png" alt="Elephant">
+            <p>Elephant</p>
+        </div>
+        <div class="animal" onclick="playSound('frog')">
+            <img src="frog.png" alt="Frog">
+            <p>Frog</p>
+        </div>
+        <div class="animal" onclick="playSound('bird')">
+            <img src="bird.png" alt="Bird">
+            <p>Bird</p>
+        </div>
+        <div class="animal" onclick="playSound('snake')">
+            <img src="snake.png" alt="Snake">
+            <p>Snake</p>
+        </div>
+        <div class="animal" onclick="playSound('horse')">
+            <img src="horse.png" alt="Horse">
+            <p>Horse</p>
+        </div>
+        <div class="animal" onclick="playSound('sheep')">
+            <img src="sheep.png" alt="Sheep">
+            <p>Sheep</p>
         </div>
     </div>
 
@@ -110,7 +154,14 @@
         const sounds = {
             dog: 'dog_bark.mp3',
             cat: 'cat_meow.mp3',
-            cow: 'cow_moo.mp3'
+            cow: 'cow_moo.mp3',
+            lion: 'lion_roar.mp3',
+            elephant: 'elephant_trumpet.mp3',
+            frog: 'frog_croak.mp3',
+            bird: 'bird_chirp.mp3',
+            snake: 'snake_hiss.mp3',
+            horse: 'horse_neigh.mp3',
+            sheep: 'sheep_baa.mp3'
         };
 
         const audioElement = document.getElementById('audio');
@@ -155,7 +206,6 @@
             audioElement.play();
 
             function drawMovingDot() {
-                // Clear the canvas
                 ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
 
                 // Redraw the waveform
