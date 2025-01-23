@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sound Wave with Moving Point</title>
+    <title>Sound Wave with Moving Dot</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,7 +82,7 @@
     <header>
         <h1>Animal Sounds</h1>
     </header>
-    <p>Click on an animal to hear its sound and see the moving point along the sound wave.</p>
+    <p>Click on an animal to hear its sound and see the moving dot along the sound wave.</p>
 
     <div class="container">
         <div class="animal" onclick="playSound('dog')">
@@ -127,13 +127,6 @@
 
         async function drawWaveform(audioUrl) {
             audioBuffer = await fetchAndDecodeAudio(audioUrl);
-            const offlineContext = new OfflineAudioContext(1, audioBuffer.length, audioBuffer.sampleRate);
-            const source = offlineContext.createBufferSource();
-            source.buffer = audioBuffer;
-            source.connect(offlineContext.destination);
-            source.start(0);
-            await offlineContext.startRendering();
-
             const bufferData = audioBuffer.getChannelData(0); // Use the first channel
             const step = Math.ceil(bufferData.length / canvas.width);
             const amp = canvas.height / 2;
@@ -161,19 +154,28 @@
             drawWaveform(audioUrl);
             audioElement.play();
 
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const analyser = audioContext.createAnalyser();
-            const source = audioContext.createMediaElementSource(audioElement);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
+            const step = Math.ceil(audioBuffer.length / canvas.width);
+            const bufferData = audioBuffer.getChannelData(0); // For rendering dot
 
             function drawMarker() {
-                const currentTime = audioElement.currentTime;
-                const progress = currentTime / audioBuffer.duration;
+                // Clear the marker layer
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Redraw the waveform
+                drawWaveform(audioUrl);
+
+                // Calculate marker position
+                const progress = audioElement.currentTime / audioBuffer.duration;
                 const x = progress * canvas.width;
 
-                ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-                ctx.fillRect(x - 2, 0, 4, canvas.height); // Draw marker
+                // Draw the red dot
+                const index = Math.floor(progress * audioBuffer.length);
+                const y = canvas.height / 2 + bufferData[index] * (canvas.height / 2);
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
 
                 if (!audioElement.paused && !audioElement.ended) {
                     requestAnimationFrame(drawMarker);
