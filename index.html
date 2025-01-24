@@ -14,7 +14,7 @@
         }
 
         header {
-            background-color: #6c63ff;
+            background: linear-gradient(to right, #0a4b57, #0e7b7f);
             color: white;
             padding: 20px 0;
             margin-bottom: 20px;
@@ -35,8 +35,8 @@
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 20px;
-            padding: 10px;
+            gap: 30px;
+            padding: 15px;
             background-color: white;
             border-bottom: 2px solid #ddd;
         }
@@ -55,11 +55,11 @@
             display: inline-block;
             border: 2px solid #ddd;
             border-radius: 10px;
-            padding: 15px;
+            padding: 30px;
             background-color: white;
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
-            width: 150px;
+            width: 220px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -70,10 +70,10 @@
         }
 
         img {
-            width: 120px;
-            height: 120px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         canvas {
@@ -87,7 +87,7 @@
         footer {
             margin-top: 20px;
             padding: 10px 0;
-            background-color: #6c63ff;
+            background: linear-gradient(to right, #0a4b57, #0e7b7f);
             color: white;
             font-size: 0.9rem;
             box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
@@ -96,8 +96,12 @@
 </head>
 <body>
     <header>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+        <img src="logo_kfupm.png" alt="Left Logo" style="height: 50px; width: auto;">
         <h1>Animal Sounds</h1>
-    </header>
+        <img src="logo-right.png" alt="Right Logo" style="height: 50px; width: auto;">
+    </div>
+</header>
     <p>Click on an animal to hear its sound and see the waveform.</p>
 
     <div class="slider-container">
@@ -147,7 +151,7 @@
     <canvas id="waveformCanvas" width="800" height="200"></canvas>
 
     <footer>
-        <p>© 2025 Animal Sound Webpage. All Rights Reserved.</p>
+        <p style="color: white !important;">© 2025 Animal Sound Webpage. All Rights Reserved.</p>
     </footer>
 
     <script>
