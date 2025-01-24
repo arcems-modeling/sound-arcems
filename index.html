@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sound Wave</title>
+    <title>Animal Sounds</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #d7f3e3, #a1dabf);
             margin: 0;
             padding: 0;
             text-align: center;
@@ -23,22 +23,24 @@
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 3rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         p {
-            font-size: 1.2rem;
-            color: #555;
+            font-size: 1.5rem;
+            color: #444;
+            margin-bottom: 20px;
         }
 
         .slider-container {
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 30px;
-            padding: 15px;
-            background-color: white;
-            border-bottom: 2px solid #ddd;
+            gap: 40px;
+            padding: 20px;
+            background-color: #eaf8f0;
+            border-bottom: 3px solid #a1dabf;
         }
 
         .slider-container::-webkit-scrollbar {
@@ -46,63 +48,91 @@
         }
 
         .slider-container::-webkit-scrollbar-thumb {
-            background-color: #ccc;
+            background-color: #0e7b7f;
             border-radius: 10px;
         }
 
         .animal {
             flex: 0 0 auto;
             display: inline-block;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 30px;
-            background-color: white;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 3px solid #0e7b7f;
+            border-radius: 15px;
+            padding: 20px;
+            background-color: #d7f3e3;
+            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
             width: 220px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
         .animal:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            transform: scale(1.2);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
         }
 
-        img {
-            width: 200px;
-            height: 200px;
+        .animal img {
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         canvas {
-            margin-top: 20px;
-            border: 2px solid #6c63ff;
+            margin-top: 30px;
+            border: 3px solid #0e7b7f;
             border-radius: 10px;
             background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         footer {
             margin-top: 20px;
-            padding: 10px 0;
+            padding: 15px 0;
             background: linear-gradient(to right, #0a4b57, #0e7b7f);
             color: white;
-            font-size: 0.9rem;
-            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo-container img {
+            height: 120px;
+            width: auto;
         }
     </style>
 </head>
 <body>
     <header>
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <img src="logo_kfupm.png" alt="Left Logo" style="height: 120px; width: auto;">
-        <h1>Animal Sounds</h1>
-        <img src="logo-right.png" alt="Right Logo" style="height: 120px; width: auto;">
-    </div>
-</header>
-    <p>Click on an animal to hear its sound and see the waveform.</p>
+        <div class="logo-container">
+            <img src="logo-left.png" alt="Left Logo">
+            <h1>Animal Sounds</h1>
+            <img src="logo-right.png" alt="Right Logo">
+        </div>
+    </header>
+    <p>Click on an animal to hear its sound and see the waveform!</p>
 
     <div class="slider-container">
         <div class="animal" onclick="playSound('dog')">
@@ -151,7 +181,7 @@
     <canvas id="waveformCanvas" width="800" height="200"></canvas>
 
     <footer>
-        <p style="color: white !important;">© 2025 Animal Sound Webpage. All Rights Reserved.</p>
+       <p style="color: white !important;">© 2025 ARCEMS. All Rights Reserved.</p>
     </footer>
 
     <script>
