@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="viewport" content="width=1200"> <!-- Fixed viewport width for desktop -->
     <title>Underwater Sounds</title>
     <style>
         body {
@@ -37,7 +37,7 @@
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 150px;
+            gap: 100px;
             padding: 20px;
             background-color: #eaf8f0;
             border-bottom: 3px solid #a1dabf;
@@ -72,8 +72,8 @@
         }
 
         .animal img {
-            width: 360px;
-            height: 360px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             margin-bottom: 30px;
             animation: bounce 2s infinite;
@@ -160,7 +160,7 @@
             <p>Large Ship</p>
         </div>
         <div class="animal" onclick="playSound('bird')">
-            <img src="earthquake.png" alt="Bird">
+            <img src="tremor.png" alt="Bird">
             <p>Earthquake</p>
         </div>
         <div class="animal" onclick="playSound('snake')">
@@ -168,12 +168,12 @@
             <p>Airgun</p>
         </div>
         <div class="animal" onclick="playSound('horse')">
-            <img src="tremor.png" alt="Horse">
+            <img src="earthquake.png" alt="Horse">
             <p>Tremor</p>
         </div>
         <div class="animal" onclick="playSound('Dolphin')">
             <img src="dolphin.png" alt="Dolphin">
-            <p></p>
+            <p>Dolphin</p>
         </div>
 <div class="animal" onclick="playSound('')">
             <img src="" alt="">
