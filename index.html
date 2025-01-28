@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-   <meta name="viewport" content="width=1200"> <!-- Fixed viewport width for desktop -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Underwater Sounds</title>
     <style>
         body {
@@ -37,7 +37,7 @@
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 100px;
+            gap: 40px;
             padding: 20px;
             background-color: #eaf8f0;
             border-bottom: 3px solid #a1dabf;
@@ -61,7 +61,7 @@
             background-color: #d7f3e3;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
-            width: 380px;
+            width: 220px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
@@ -72,10 +72,10 @@
         }
 
         .animal img {
-            width: 250px;
-            height: 250px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             animation: bounce 2s infinite;
         }
 
@@ -134,7 +134,7 @@
     </header>
     <p>Click to hear sound and see the waveform!</p>
 
-    <div class="slider-container">
+     <div class="slider-container">
         <div class="animal" onclick="playSound('dog')">
             <img src="minke_whale.png" alt="Dog">
             <p>Minke Whale</p>
@@ -150,6 +150,10 @@
         <div class="animal" onclick="playSound('lion')">
             <img src="blue_whale.png" alt="Lion">
             <p>Blue Whale</p>
+        </div>
+ <div class="animal" onclick="playSound('Dolphin')">
+            <img src="dolphin.png" alt="Dolphin">
+            <p>Dolphin</p>
         </div>
         <div class="animal" onclick="playSound('elephant')">
             <img src="small_boat.png" alt="Elephant">
@@ -170,10 +174,6 @@
         <div class="animal" onclick="playSound('horse')">
             <img src="earthquake.png" alt="Horse">
             <p>Tremor</p>
-        </div>
-        <div class="animal" onclick="playSound('Dolphin')">
-            <img src="dolphin.png" alt="Dolphin">
-            <p>Dolphin</p>
         </div>
 <div class="animal" onclick="playSound('')">
             <img src="" alt="">
@@ -198,13 +198,12 @@
             cat: 'Finwhale.mp3',
             cow: 'Humpbackwhale.mp3',
             lion: 'bluewhale.mp3',
+	    Dolphin: 'dolphin.mp3',
             elephant: 'ship_small.mp3',
             frog: 'Large_ship.mp3',
             bird: 'earthquake_sound.mp3',
             snake: 'airguns.mp3',
-            horse: 'tremor_sound.mp3',
-            Dolphin: 'dolphin.mp3',
-Dolphin: 'dolphin.mp3'
+            horse: 'tremor_sound.mp3'
         };
 
          const audioElement = new Audio();
